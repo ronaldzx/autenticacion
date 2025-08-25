@@ -1,5 +1,6 @@
 package co.com.bancolombia.api.exception;
 
+import co.com.bancolombia.api.dto.ErrorResponseDTO;
 import co.com.bancolombia.model.applicant.exception.EmailAlreadyExistsException;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.stereotype.Component;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
 
@@ -33,16 +35,10 @@ public class GlobalErrorHandler extends AbstractErrorWebExceptionHandler {
     private Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
         Throwable error = getError(request);
 
-        if (error instanceof EmailAlreadyExistsException) {
+        if (error instanceof EmailAlreadyExistsException || error instanceof InvalidApplicantDataException) {
             return ServerResponse.status(HttpStatus.BAD_REQUEST)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(Map.of("code", "400", "message", error.getMessage()));
-        }
-
-        if (error instanceof InvalidApplicantDataException) {
-            return ServerResponse.status(HttpStatus.BAD_REQUEST)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(Map.of("code", "400", "message", error.getMessage()));
+                    .bodyValue(new ErrorResponseDTO("400",error.getMessage()));
         }
 
         return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
