@@ -5,7 +5,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface ApplicantRepository {
-    Mono<Applicant> save(Applicant task);
+    Mono<Applicant> save(Applicant applicant);
 
     Mono<Applicant> findByEmailAddress(String email);
 

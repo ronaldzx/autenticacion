@@ -5,6 +5,7 @@ import co.com.bancolombia.api.exception.validator.ValidatorHandler;
 import co.com.bancolombia.api.mapper.ApplicantMapper;
 import co.com.bancolombia.usecase.applicant.ApplicantUseCase;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -14,16 +15,21 @@ import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class Handler {
     private final ApplicantUseCase applicantUseCase;
     private final ApplicantMapper applicantMapper;
     private final ValidatorHandler validatorHandler;
 
     public Mono<ServerResponse> listenSaveApplicant(ServerRequest serverRequest) {
+        log.trace("Request received to save applicant");
         return serverRequest.bodyToMono(ApplicantDTO.class)
+                .doOnNext(applicant-> log.info("Validating applicant request: {}", applicant))
                 .doOnNext(validatorHandler::validate)
                 .map(applicantMapper::toApplicant)
                 .flatMap(applicantUseCase::saveApplicant)
+                .doOnSuccess(applicant-> log.info("Applicant saved: {}", applicant))
+                .doOnError(error -> log.info("Error saving applicant", error))
                 .flatMap(savedApplicant -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(savedApplicant));

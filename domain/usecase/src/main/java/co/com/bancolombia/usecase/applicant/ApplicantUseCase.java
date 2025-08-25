@@ -15,8 +15,7 @@ public class ApplicantUseCase {
         return applicantRepository.findByEmailAddress(applicant.getEmailAddress())
                 .flatMap(exists ->
                         Mono.<Applicant>error(new EmailAlreadyExistsException("Email already exists"))
-                )
-                .switchIfEmpty(applicantRepository.save(applicant));
+                ).switchIfEmpty(applicantRepository.save(applicant));
     }
 
 }

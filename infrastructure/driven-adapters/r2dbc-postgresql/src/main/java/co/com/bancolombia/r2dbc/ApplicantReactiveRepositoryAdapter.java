@@ -6,6 +6,7 @@ import co.com.bancolombia.r2dbc.entity.ApplicantEntity;
 import co.com.bancolombia.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.CallbackPreferringPlatformTransactionManager;
 import reactor.core.publisher.Mono;
 
@@ -23,6 +24,12 @@ public class ApplicantReactiveRepositoryAdapter extends ReactiveAdapterOperation
          *  Or using mapper.map with the class of the object model
          */
         super(repository, mapper, d -> mapper.map(d, Applicant.class/* change for domain model */));
+    }
+
+    @Override
+    @Transactional
+    public Mono<Applicant> save(Applicant applicant){
+        return super.save(applicant);
     }
 
     @Override
