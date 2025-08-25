@@ -33,9 +33,17 @@ import lombok.extern.log4j.Log4j2;
 @Configuration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
-public class AuthorizationJwt implements WebFluxConfigurer {
-
-    private final String issuerUri;
+public class AuthorizationJwt /*implements WebFluxConfigurer */{
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        return http
+                .csrf(ServerHttpSecurity.CsrfSpec::disable) // desactiva CSRF
+                .authorizeExchange(exchanges -> exchanges
+                        .anyExchange().permitAll() // permite todo sin auth
+                )
+                .build();
+    }
+/*    private final String issuerUri;
     private final String clientId;
     private final String jsonExpRoles;
 
@@ -102,5 +110,5 @@ public class AuthorizationJwt implements WebFluxConfigurer {
             log.error(e.getMessage());
             return roles;
         }
-    }
+    }*/
 }

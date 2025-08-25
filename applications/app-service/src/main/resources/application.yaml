@@ -15,10 +15,10 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: "https://idp.example.com/issuer"
-          client-id: "myclientid"
+          issuer-uri: http://localhost:8080/realms/myrealm
+          client-id: my-client-id
 jwt:
-  json-exp-roles: "/roles"
+  json-exp-roles: realm_access.roles
 management:
   endpoints:
     web:
@@ -30,3 +30,15 @@ management:
         enabled: true
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+routes:
+  paths:
+    user: "/api/v1/usuarios"
+    login: "/api/v1/login"
+adapters:
+  r2dbc:
+    host: "localhost"
+    port: 5432
+    database: "autenticacion"
+    schema: "public"
+    username: "postgres"
+    password: "admin"
