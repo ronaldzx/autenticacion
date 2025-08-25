@@ -4,13 +4,18 @@ import co.com.bancolombia.model.applicant.Applicant;
 import co.com.bancolombia.model.applicant.gateways.ApplicantRepository;
 import co.com.bancolombia.r2dbc.entity.ApplicantEntity;
 import co.com.bancolombia.r2dbc.helper.ReactiveAdapterOperations;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.CallbackPreferringPlatformTransactionManager;
 import reactor.core.publisher.Mono;
 
+import java.util.logging.Logger;
+
 @Repository
+@Slf4j
 public class ApplicantReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         Applicant,
         ApplicantEntity,
@@ -29,7 +34,9 @@ public class ApplicantReactiveRepositoryAdapter extends ReactiveAdapterOperation
     @Override
     @Transactional
     public Mono<Applicant> save(Applicant applicant){
-        return super.save(applicant);
+        return super.save(applicant)
+                .doOnSuccess(applicant1 -> log.info("Applicant registered"))
+                .doOnError(error-> log.info("Couldn't save the applicant"));
     }
 
     @Override

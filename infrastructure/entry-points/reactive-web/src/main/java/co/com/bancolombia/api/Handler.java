@@ -26,10 +26,10 @@ public class Handler {
         return serverRequest.bodyToMono(ApplicantDTO.class)
                 .doOnNext(applicant-> log.info("Validating applicant request: {}", applicant))
                 .doOnNext(validatorHandler::validate)
+                .doOnSuccess(applicant -> log.info("Validation success"))
+                .doOnError(error -> log.error("Body malformed"))
                 .map(applicantMapper::toApplicant)
                 .flatMap(applicantUseCase::saveApplicant)
-                .doOnSuccess(applicant-> log.info("Applicant saved: {}", applicant))
-                .doOnError(error -> log.info("Error saving applicant", error))
                 .flatMap(savedApplicant -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(savedApplicant));
