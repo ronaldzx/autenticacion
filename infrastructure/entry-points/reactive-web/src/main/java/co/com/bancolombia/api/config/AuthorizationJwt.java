@@ -37,9 +37,9 @@ public class AuthorizationJwt /*implements WebFluxConfigurer */{
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable) // desactiva CSRF
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
-                        .anyExchange().permitAll() // permite todo sin auth
+                        .anyExchange().permitAll()
                 )
                 .build();
     }

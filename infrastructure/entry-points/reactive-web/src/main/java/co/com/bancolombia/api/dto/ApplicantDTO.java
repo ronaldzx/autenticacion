@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class ApplicantDTO {
-    private String id;
     @NotBlank(message = "name can't be null or empty")
     private String name;
     @NotBlank(message = "lastName name can't be null or empty")

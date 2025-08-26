@@ -31,7 +31,7 @@ public class RouterRest {
     @Bean
     @RouterOperations({
             @RouterOperation(
-                    path = "/applicants",
+                    path = "/api/v1/usuarios",
                     produces = { MediaType.APPLICATION_JSON_VALUE },
                     method = RequestMethod.POST,
                     beanClass = Handler.class,

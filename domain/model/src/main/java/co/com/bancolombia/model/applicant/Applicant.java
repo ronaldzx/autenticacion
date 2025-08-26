@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Applicant {
-    private String id;
+
     private String name;
     private String lastName;
     private LocalDate birthDate;

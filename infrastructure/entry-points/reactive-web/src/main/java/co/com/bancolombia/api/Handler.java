@@ -30,6 +30,7 @@ public class Handler {
                 .doOnError(error -> log.error("Body malformed"))
                 .map(applicantMapper::toApplicant)
                 .flatMap(applicantUseCase::saveApplicant)
+                .map(applicantMapper::toApplicantDTO)
                 .flatMap(savedApplicant -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(savedApplicant));
